@@ -7,34 +7,34 @@ module Metasm
 # this class implements a high-level debugging API (abstract superclass)
 class Debugger
 	class Breakpoint
-		attr_accessor :address,
-			# context where the bp was defined
-			:pid, :tid,
-			# bool: oneshot ?
-			:oneshot,
-			# current bp state: :active, :inactive (internal use), :disabled (user-specified)
-			:state,
-			# type: type of breakpoint (:bpx = soft, :hw = hard)
-			:type,
-			# Expression if this is a conditionnal bp
-			# may be a Proc, String or Expression, evaluated every time the breakpoint hits
-			# if it returns 0 or false, the breakpoint is ignored
-			:condition,
-			# Proc to run if this bp has a callback
-			:action,
-			# Proc to run to emulate the overwritten instr behavior
-			# used to avoid unset/singlestep/re-set, more multithread friendly
-			# may be a DecodedInstruction for lazy initialization, see Debugger#init_bpx/has_emul_instr(bpx)
-			:emul_instr,
-			# internal data, cpu-specific (overwritten byte for a softbp, memory type/size for hwbp..)
-			:internal,
-			# reference breakpoints sharing a target implementation (same hw debug register, soft bp addr...)
-			#  shared is an array of Breakpoints, the same Array object in all shared breakpoints
-			#  owner is a hash key => shared (dbg.breakpoint)
-			#  key is an identifier for the Bp class in owner (bp.address)
-			:hash_shared, :hash_owner, :hash_key,
-			# user-defined breakpoint-specific stuff
-			:userdata
+		attr_accessor :address
+		# context where the bp was defined
+		attr_accessor :pid, :tid
+		# bool: oneshot ?
+		attr_accessor :oneshot
+		# current bp state: :active, :inactive (internal use), :disabled (user-specified)
+		attr_accessor :state
+		# type: type of breakpoint (:bpx = soft, :hw = hard)
+		attr_accessor :type
+		# Expression if this is a conditionnal bp
+		# may be a Proc, String or Expression, evaluated every time the breakpoint hits
+		# if it returns 0 or false, the breakpoint is ignored
+		attr_accessor :condition
+		# Proc to run if this bp has a callback
+		attr_accessor :action
+		# Proc to run to emulate the overwritten instr behavior
+		# used to avoid unset/singlestep/re-set, more multithread friendly
+		# may be a DecodedInstruction for lazy initialization, see Debugger#init_bpx/has_emul_instr(bpx)
+		attr_accessor :emul_instr
+		# internal data, cpu-specific (overwritten byte for a softbp, memory type/size for hwbp..)
+		attr_accessor :internal
+		# reference breakpoints sharing a target implementation (same hw debug register, soft bp addr...)
+		#  shared is an array of Breakpoints, the same Array object in all shared breakpoints
+		#  owner is a hash key => shared (dbg.breakpoint)
+		#  key is an identifier for the Bp class in owner (bp.address)
+		attr_accessor :hash_shared, :hash_owner, :hash_key
+		# user-defined breakpoint-specific stuff
+		attr_accessor :userdata
 
 		# append the breakpoint to hash_owner + hash_shared
 		def add(owner=@hash_owner)
@@ -133,10 +133,11 @@ class Debugger
 
 	# global switches, specify wether to break on exception/thread event
 	#  can be a Proc that is evaluated (arg = info parameter of the evt_func)
+	attr_accessor :pass_all_exceptions, :ignore_newthread, :ignore_endthread
+	
 	# trace_children is a bool to tell if we should debug subprocesses spawned
 	#  by the target
-	attr_accessor :pass_all_exceptions, :ignore_newthread, :ignore_endthread,
-		:trace_children
+	attr_accessor :trace_children
 
 	# link to the user-interface object if available
 	attr_accessor :gui

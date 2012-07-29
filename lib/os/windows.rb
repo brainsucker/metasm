@@ -1714,11 +1714,11 @@ end
 # this class implements a high-level API over the Windows debugging primitives
 class WinDebugger < Debugger
 	attr_accessor :os_process, :os_thread,
-		:auto_fix_fs_bug,
-		# is current exception handled? (arg to pass to continuedbgevt)
-		# if it has the special value :suspended, it means that the thread
-		# is to be restarted through resume and not continuedbgevt
-		:continuecode
+		:auto_fix_fs_bug
+	# is current exception handled? (arg to pass to continuedbgevt)
+	# if it has the special value :suspended, it means that the thread
+	# is to be restarted through resume and not continuedbgevt
+	attr_accessor :continuecode
 
 	attr_accessor :callback_unloadlibrary, :callback_debugstring, :callback_ripevent
 
